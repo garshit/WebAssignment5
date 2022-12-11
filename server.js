@@ -168,9 +168,21 @@ app.post("/login", (req, res) => {
   }
   newUser.findOne({ username: userdata.username, password: userdata.pass }, ["firstname", "lastname", "username"]).exec().then((data) => {
     if (data) {
-        if (data.id == "637334404c1dbec03e38862b") {
-            res.render("administrator", { layout: false });
-            return;
+         if (data.id == "637334404c1dbec03e38862b") {
+            blogs.find().exec().then((data) => {
+                let datalog = new Array;
+                data.forEach(element => {
+                    datalog.push({
+                        title: element.title,
+                        date: element.date,
+                        content: element.content,
+                        image: element.image
+                    });
+                });
+                res.render("administrator", { firstname: data.firstname, lastname: data.lastname, username: data.username,title: datalog, layout: false });
+           return;
+            });
+            
         }
         else {
             res.render("dashboard_user", { firstname: data.firstname, lastname: data.lastname, username: data.username, layout: false });
